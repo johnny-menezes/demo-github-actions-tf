@@ -1,4 +1,4 @@
-name: "TERRAFORM-CI-CD-HOMOL"
+name: "Terraform-CI-CD-Homol"
 on:
   push:
     branches:
@@ -12,25 +12,45 @@ permissions:
       pull-requests: write # This is required for gh bot to comment PR
 env:
   TF_LOG: INFO
-  AWS_REGION: us-east-1
-  #AWS_REGION: ${{ secrets.AWS_REGION }}
+  
 jobs:
+  Build-Terraform:
+    runs-on: ubuntu-latest    
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v3
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: terraform
+          path: .
+
   hom_deploy:
+    name: Deploy Infra Homol
     runs-on: ubuntu-latest
+
     defaults:
       run:
         shell: bash
         working-directory: ./homol
+    
+    environment:
+        name: homol
+    
+    needs: Build-Terraform
     steps:
-      - name: Git checkout
-        uses: actions/checkout@v3
+      - name: Download Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: terraform
+          path: .
 
       - name: Configure AWS credentials from AWS account
         uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: ${{ secrets.AWS_ROLE }}
-          aws-region: us-east-1
-          #aws-region: ${{ secrets.AWS_REGION }}
+          aws-region: ${{ secrets.AWS_REGION }}
           
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
