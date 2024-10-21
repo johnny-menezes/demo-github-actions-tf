@@ -74,6 +74,11 @@ jobs:
         if: github.event_name == 'pull_request'
         continue-on-error: true
 
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/"homol"' && github.event_name == 'pull_request'
+        run: terraform apply homol_deploy.tfplan -auto-approve
+
+
       - uses: actions/github-script@v6
         if: github.event_name == 'pull_request'
         env:
@@ -110,7 +115,4 @@ jobs:
               repo: context.repo.repo,
               body: output
             })
-
-      - name: Terraform Apply
-        if: github.ref == 'refs/heads/"homol"' && github.event_name == 'pull_request'
-        run: terraform apply homol_deploy.tfplan -auto-approve 
+ 
