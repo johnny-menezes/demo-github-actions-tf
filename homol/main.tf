@@ -2,6 +2,10 @@
 
 ######### AMI to Amazon Linux #####
 
+data "aws_vpc" "selected" {
+  id = var.vpc_id
+}
+
 data "aws_ami" "amazon_linux" {
   most_recent = true
   owners      = ["amazon"]
