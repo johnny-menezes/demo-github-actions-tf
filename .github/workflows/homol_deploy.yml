@@ -76,7 +76,7 @@ jobs:
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/homol' && github.event_name == 'pull_request'
-        run: terraform apply deploy_homol.tfplan -input=true
+        run: terraform apply deploy_homol.tfplan
 
 
       - uses: actions/github-script@v6
