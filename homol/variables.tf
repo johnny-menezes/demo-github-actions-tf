@@ -20,7 +20,3 @@ variable "repo" {
     default     = "GitHub"
 }
 
-variable "vpc_id" {
-    type = string
-    default "vpc-05880c4fbc026e330"
-}

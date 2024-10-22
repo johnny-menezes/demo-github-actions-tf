@@ -2,10 +2,6 @@
 
 ######### AMI to Amazon Linux #####
 
-data "aws_vpc" "selected" {
-  id = var.vpc_id
-}
-
 data "aws_ami" "amazon_linux" {
   most_recent = true
   owners      = ["amazon"]
@@ -26,6 +22,7 @@ data "aws_ami" "amazon_linux" {
 resource "aws_instance" "example" {
   ami           = data.aws_ami.amazon_linux.id
   instance_type = "t3a.micro"
+  subnet_id     = "subnet-04b9a7af89e966ff6"
   tags = {
     Name = "ec2-demo-gopoints"
     Environment = var.environment
