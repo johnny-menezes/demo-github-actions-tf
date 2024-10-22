@@ -76,7 +76,7 @@ jobs:
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/homol' && github.event_name == 'push'
-        run: terraform apply homol_deploy.tfplan -auto-approve
+        run: terraform apply homol_deploy.tfplan
 
 
       - uses: actions/github-script@v6
