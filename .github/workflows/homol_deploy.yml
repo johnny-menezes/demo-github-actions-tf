@@ -1,6 +1,7 @@
 name: "Terraform-CI-CD-Homol"
 on:
-  push:
+  pull_request:
+    types: closed
     branches:
       - homol
   pull_request:      
