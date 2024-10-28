@@ -1,11 +1,10 @@
 name: "Terraform-CI-CD-Homol"
+
 on:
-  push:
-    branches:
-      - homol
   pull_request:
-    branches:
-      - homol
+    types: closed
+    branches: homol
+    
 permissions:
       id-token: write      # This is required for aws oidc connection
       contents: read       # This is required for actions/checkout
@@ -74,11 +73,6 @@ jobs:
         if: github.event_name == 'pull_request'
         continue-on-error: true
 
-      - name: Terraform Apply
-        if: github.event_name == 'pull_request'
-        run: terraform apply deploy_homol.tfplan
-
-
       - uses: actions/github-script@v6
         if: github.event_name == 'pull_request'
         env:
@@ -115,4 +109,13 @@ jobs:
               repo: context.repo.repo,
               body: output
             })
- 
+
+
+      - name: Terraform Plan Status
+        if: steps.plan.outcome == 'failure'
+        run: exit 1
+
+
+      - name: Terraform Apply
+        if: github.event_name == 'pull_request'
+        run: terraform apply deploy_homol.tfplan
