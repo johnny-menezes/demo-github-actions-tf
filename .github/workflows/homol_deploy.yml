@@ -1,45 +1,60 @@
-name: "TERRAFORM-CI-CD-HOMOL"
+name: "Terraform-CI-CD-Homol"
+
 on:
-  push:
-    branches:
-      - homol
   pull_request:
-    branches:
-      - homol
+    types: closed
+    branches: homol
+    
 permissions:
-      id-token: write # This is required for aws oidc connection
-      contents: read # This is required for actions/checkout
+      id-token: write      # This is required for aws oidc connection
+      contents: read       # This is required for actions/checkout
       pull-requests: write # This is required for gh bot to comment PR
 env:
   TF_LOG: INFO
-  AWS_REGION: ${{ secrets.AWS_REGION }}
+  
 jobs:
-  hom_deploy:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
-        working-directory: ./homol
+  Build-Terraform:
+    runs-on: ubuntu-latest    
     steps:
       - name: Git checkout
         uses: actions/checkout@v3
 
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform
+          path: .
+
+  hom_deploy:
+    name: Deploy Infra Homol
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./homol
+    
+    environment:
+        name: homol
+    
+    needs: Build-Terraform
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: terraform
+          path: .
+
       - name: Configure AWS credentials from AWS account
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: ${{ secrets.AWS_ROLE }}
           aws-region: ${{ secrets.AWS_REGION }}
-          role-session-name: openid-role-homol
-
+          
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.2.5
-
-      - name: Terraform fmt
-        id: fmt
-        run: terraform fmt -check
-        continue-on-error: true
 
       - name: Terraform Init
         id: init
@@ -54,7 +69,7 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan -no-color
+        run: terraform plan -out=deploy_homol.tfplan
         if: github.event_name == 'pull_request'
         continue-on-error: true
 
@@ -95,10 +110,12 @@ jobs:
               body: output
             })
 
+
       - name: Terraform Plan Status
         if: steps.plan.outcome == 'failure'
         run: exit 1
 
+
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/hom' && github.event_name == 'push'
-        run: terraform apply -auto-approve -input=true
+        if: github.event_name == 'pull_request'
+        run: terraform apply deploy_homol.tfplan
