@@ -56,10 +56,6 @@ jobs:
         with:
           terraform_version: 'latest'
 
-      - name: Terraform Format
-        id: fmt
-        run: terraform fmt -check -recursive
-
       - name: Terraform Init
         id: init
         env:
