@@ -2,7 +2,7 @@ name: "Terraform-CI-CD-Homol"
 
 on:
   pull_request:
-    types: opened
+    types: closed
     branches: homol
     
 permissions:
