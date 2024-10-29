@@ -81,17 +81,38 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
-            #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
-            #### Terraform Plan 📜\`${{ steps.plan.outcome }}\`
-            #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
-            #### Terraform Apply 🚀\`${{ steps.apply.outcome }}\`
+            cconst output = `
+            #### Terraform Format and Style 🖌 \`${{ steps.fmt.outcome }}\`
+            #### Terraform Initialization ⚙️ \`${{ steps.init.outcome }}\`
+            #### Terraform Plan 📜 \`${{ steps.plan.outcome }}\`
+            #### Terraform Validation 🤖 \`${{ steps.validate.outcome }}\`
+            #### Terraform Apply 🚀 \`${{ steps.apply.outcome }}\`
+          
             <details><summary>Plan Output</summary>
+          
             \`\`\`
-            ${{ env.PLAN }}
+            ${{ steps.plan.outputs.stdout }}
             \`\`\`
-            </details>`;
-            console.log(output);
+          
+            </details>
+          
+            <details><summary>Show Plan</summary>
+          
+            \`\`\`
+            ${process.env.PLAN}
+            \`\`\`
+            
+            </details>
+
+            *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
+
 
       - name: Terraform Plan Status
         if: steps.plan.outcome == 'failure'
