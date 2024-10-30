@@ -25,7 +25,7 @@ jobs:
           name: terraform
           path: .
 
-  hom_deploy:
+  hom-deploy:
     name: Deploy Infra Homol
     runs-on: ubuntu-latest
 
