@@ -3,7 +3,7 @@ name: "Terraform-Plan-CI-CD"
 on:
   pull_request:
     types: opened
-    branches: homol
+    branches: prod
     
 permissions:
       id-token: write      # This is required for aws oidc connection
@@ -25,17 +25,17 @@ jobs:
           name: terraform
           path: .
 
-  Planning-Deployment-in-Homol:
-    name: Planning Deployment in Homol
+  Planning-Deployment-in-Prod:
+    name: Planning Deployment in Prod
     runs-on: ubuntu-latest
 
     defaults:
       run:
         shell: bash
-        working-directory: ./homol
+        working-directory: ./prod
     
     environment:
-        name: homol
+        name: prod
     
     needs: Build-Terraform
     steps:
@@ -69,7 +69,7 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan -out=deploy_homol.tfplan
+        run: terraform plan -out=deploy_prod.tfplan
         if: github.event_name == 'pull_request'
         continue-on-error: true
 
