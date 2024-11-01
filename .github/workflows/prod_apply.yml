@@ -25,8 +25,8 @@ jobs:
           name: terraform
           path: .
 
-  Planning-Deployment-in-Prod:
-    name: Planning Deployment in Prod
+  Deployment-in-Prod:
+    name: Deployment in Prod
     runs-on: ubuntu-latest
 
     defaults:
