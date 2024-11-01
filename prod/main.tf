@@ -17,7 +17,7 @@ data "aws_ami" "amazon_linux" {
   }
 }
 */
-######### create ec2  #############
+######### create ec2  ###############
 /*
 resource "aws_instance" "example" {
   ami           = data.aws_ami.amazon_linux.id
