@@ -1,4 +1,4 @@
-name: "Terraform-Apply-CI-CD"
+name: "2 - [HOMOL] Build & HOMOL DEPLOY"
 
 on:
   pull_request:
