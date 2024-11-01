@@ -80,7 +80,7 @@ jobs:
       - name: Terraform Apply
         id: apply
         if: github.event_name == 'pull_request'
-        run: terraform apply deploy_homol.tfplan
+        run: terraform apply deploy_prod.tfplan
 
       
       - uses: actions/github-script@v6
