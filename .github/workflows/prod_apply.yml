@@ -25,7 +25,11 @@ jobs:
           name: terraform
           path: .
 
+<<<<<<< HEAD
   Planning-Deployment-in-Prod:
+=======
+  Deployment-in-Prod:
+>>>>>>> aa7f52691b935b15e257641897d0383b3633b230
     name: Deployment in Prod
     runs-on: ubuntu-latest
 
