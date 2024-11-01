@@ -3,7 +3,7 @@ name: "3 - [PROD] Promote & PROD Deploy"
 on:
   pull_request:
     types: opened
-    branches: prod
+    branches: master
     
 permissions:
       id-token: write      # This is required for aws oidc connection
