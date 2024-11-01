@@ -1,4 +1,4 @@
-name: "Terraform-Plan-CI-CD"
+name: "1 - [HOMOL] Build & PLANNING"
 
 on:
   pull_request:
