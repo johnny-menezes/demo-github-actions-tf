@@ -1,9 +1,9 @@
-name: "Terraform-Apply-CI-CD"
+name: "2 - [HOMOL] Build & HOMOL DEPLOY"
 
 on:
   pull_request:
     types: closed
-    branches: master
+    branches: homol
     
 permissions:
       id-token: write      # This is required for aws oidc connection
@@ -25,17 +25,17 @@ jobs:
           name: terraform
           path: .
 
-  Deploy-Infra-Prod:
-    name: Deploy Infra Prod
+  Deploy-Infra-Homol:
+    name: Deploy Infra Homol
     runs-on: ubuntu-latest
 
     defaults:
       run:
         shell: bash
-        working-directory: ./prod
+        working-directory: ./homol
     
     environment:
-        name: prod
+        name: homol
     
     needs: Build-Terraform
     steps:
@@ -69,7 +69,7 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan -out=deploy_prod.tfplan
+        run: terraform plan -out=deploy_homol.tfplan
         if: github.event_name == 'pull_request'
         continue-on-error: true
 
@@ -80,7 +80,7 @@ jobs:
       - name: Terraform Apply
         id: apply
         if: github.event_name == 'pull_request'
-        run: terraform apply deploy_prod.tfplan
+        run: terraform apply deploy_homol.tfplan
 
       - uses: actions/github-script@v6
         if: github.event_name == 'pull_request'
